@@ -114,16 +114,91 @@ def add_domain():
         print(f"\nFailed to add domain. Status code: {add_domain_request.status_code}")
         print(add_domain_request.json())  # Show the error message
 
+def pause_blocking():
+    # Choose length of pause
+    timer = 60
+    print("\nHow long do you want to pause blocking for?")
+    print("1. 5 Minutes")
+    print("2. 15 Minutes")
+    print("3. 30 Minutes")
+    print("4. 1 Hour")
+    print("5. 2 Hours")
+    print("6. Forever")
+    print("7. Custom")
+    timer_choice = input("\nChoose an option: ")
+    if timer_choice == "1":
+        timer = 60
+    elif timer_choice == "2":
+        timer = (15 * 60)
+    elif timer_choice == "3":
+        timer = (30 * 60)
+    elif timer_choice == "4":
+        timer = (1 * 60 * 60)
+    elif timer_choice == "5":
+        timer = (2 * 60 * 60) 
+    elif timer_choice == "6":
+        timer = "null"
+    elif timer_choice == "7":
+        print("\nHow long should blocking be paused for?")
+        timer_input = input("\n Enter a time in minutes: ")
+        timer = (int(timer_input) * 60)
+    else:
+        print("Invalid choice!")    
+
+    pause_blocking_url = f"https://{PIHOLE_ADDR}/api/dns/blocking"
+
+    params = {
+        "blocking": False,
+        "timer": timer
+    }
+    headers = {
+        "X-FTL-SID": sid,
+        "X-FTL-CSRF": csrf
+    }
+    #send request
+    pause_blocking_request = requests.request("POST", pause_blocking_url, json=params, headers=headers, verify=False)
+    #confirm success or failure
+    if pause_blocking_request.status_code == 200:
+        print(f"\nSuccessfully paused blocking for {timer / 60} minutes.")
+    else:
+        print(f"\nFailed to pause blocking. Status code: {add_domain_request.status_code}")
+        print(add_domain_request.json())  # Show the error message
+
+def pihole_status():
+    status_url = f"https://{PIHOLE_ADDR}/api/stats/summary"
+    headers = {
+        "X-FTL-SID": sid,
+        "X-FTL-CSRF": csrf
+    }
+    pihole_status = requests.request("GET", status_url, headers=headers, verify=False)
+    data = pihole_status.json()
+    
+    # Now just access and print the values you want
+    print("\n=== Pi-hole Status ===")
+    # Extract relevant queries
+    total_queries = data["queries"]["total"]
+    blocked_queries = data["queries"]["blocked"]
+    percent_blocked = round(data["queries"]["percent_blocked"], 1)
+    active_clients = data["clients"]["active"]
+    total_clients = data["clients"]["total"]
+    # Print them with nice formatting
+    print(f"Total Queries: {total_queries}")
+    print(f"Blocked Queries: {blocked_queries}")
+    print(f"Percent Blocked: {percent_blocked}%")
+    print("-" * 60)
+    print(f"Total Clients: {total_clients}")
+    print(f"Active Clients: {active_clients}")
+
 def show_menu():
     """Display the menu options to the user"""
-    print(f"\n=== Connected to: https://{PIHOLE_ADDR} ===")
+    print(f"\n=== Connected to: https://{PIHOLE_ADDR}/api ===")
     print("1. List Top Domains")
     print("2. List Top Clients")
     print("3. List Top Blocked Domains")
     print("4. Add Domain")
-#    print("5. Save list")
-#    print("6. Load list")
-#    print("7. Quit")
+    print("5. Pause Blocking")
+    print("6. Pi-hole Status")
+    print("7. Quit")
 
 # Main program starts here
 def main():
@@ -142,13 +217,13 @@ def main():
             top_blocked_domains()
         elif choice == "4":
             add_domain()
-#        elif choice == "5":
-#            save_list(tasks)
-#        elif choice == "6":
-#            load_list(tasks)
-#        elif choice == "7":
-#            print("Goodbye!")
-#            break
+        elif choice == "5":
+            pause_blocking()
+        elif choice == "6":
+            pihole_status()
+        elif choice == "7":
+            print("Goodbye!")
+            break
         else:
             print("Invalid choice!")
 
