@@ -7,6 +7,7 @@ Tool to access pihole instance to get various metrics and access certain control
 Requires a config.py file with the following:
 
 PIHOLE_ADDR = "pi.hole" #Can also be the IP of Pihole
+
 PIHOLE_API_TOKEN = "APP PASSWORD"
 
 ## Current Features
