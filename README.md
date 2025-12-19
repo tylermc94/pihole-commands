@@ -14,3 +14,6 @@ PIHOLE_API_TOKEN = "APP PASSWORD"
 
 ### List Top Domains
 Lists out the top domains by query count.
+
+### List Top Clients
+Lists the most active client devices on the network.

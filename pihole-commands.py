@@ -7,7 +7,7 @@ csrf = ""
 
 # Set Functions
 
-def auth():
+def auth(): #Authenticate to pihole and return sid and csrf tokens
     # Set up auth variables
     auth_url = f"https://{PIHOLE_ADDR}/api/auth"
     api_key = {"password": PIHOLE_API_TOKEN}
@@ -25,12 +25,13 @@ def auth():
     sid = auth_data["session"]["sid"]
     csrf = auth_data["session"]["csrf"]
 
-def output_table(data):
-        data = data.json()
-        print(f"{'Domain':<50} {'Count':>10}")
-        print("-" * 60)
-        for item in data["domains"]:
-            print(f"{item['domain']:<50} {item['count']:>10}")
+
+def output_table(data, data_key, col1_header, col1_key, col2_header="Count", col2_key="count"): # Format json output as table
+    data = data.json()
+    print(f"{col1_header:<50} {col2_header:>10}")
+    print("-" * 60)
+    for item in data[data_key]:
+        print(f"{item[col1_key]:<50} {item[col2_key]:>10}")
 
 def top_domains():
     global sid
@@ -43,13 +44,27 @@ def top_domains():
     top_domains = requests.request("GET", top_domains_url, headers=headers, verify=False)
     print(top_domains.json())
 
-    output_table(top_domains)
+    output_table(top_domains, "domains", "Domain", "domain")
+
+def top_clients():
+    global sid
+    global csrf
+    top_clients_url = f"https://{PIHOLE_ADDR}/api/stats/top_clients"
+    headers = {
+        "X-FTL-SID": sid,
+        "X-FTL-CSRF": csrf
+    }
+    top_clients = requests.request("GET", top_clients_url, headers=headers, verify=False)
+    print(top_clients.json())
+
+    output_table(top_clients, "clients", "Client Name", "name")
+
 
 def show_menu():
     """Display the menu options to the user"""
     print(f"\n=== Connected to: https://{PIHOLE_ADDR} ===")
     print("1. List Top Domains")
-#    print("2. Add task")
+    print("2. List Top Clients")
 #    print("3. Remove task")
 #    print("4. Toggle completed")
 #    print("5. Save list")
@@ -67,8 +82,8 @@ def main():
         
         if choice == "1":
             top_domains()
-#        elif choice == "2":
-#            add_task(tasks)
+        elif choice == "2":
+            top_clients()
 #        elif choice == "3":
 #            remove_task(tasks)
 #        elif choice == "4":
