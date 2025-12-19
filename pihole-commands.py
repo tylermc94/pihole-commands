@@ -2,6 +2,7 @@ import json
 import requests # pyright: ignore[reportMissingModuleSource]
 from config import PIHOLE_ADDR, PIHOLE_API_TOKEN
 import urllib3
+
 #disable tls warnings
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -27,7 +28,6 @@ def auth(): #Authenticate to pihole and return sid and csrf tokens
     global csrf
     sid = auth_data["session"]["sid"]
     csrf = auth_data["session"]["csrf"]
-
 
 def output_table(data, data_key, col1_header, col1_key, col2_header="Count", col2_key="count"): # Format json output as table
     data = data.json()
@@ -62,7 +62,6 @@ def top_blocked_domains():
     top_blocked_domains = requests.request("GET", top_domains_url, params=params, headers=headers, verify=False)
 
     output_table(top_blocked_domains, "domains", "Domain", "domain")
-
 
 def top_clients():
     global sid
