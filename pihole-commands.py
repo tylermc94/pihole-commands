@@ -161,8 +161,8 @@ def pause_blocking():
     if pause_blocking_request.status_code == 200:
         print(f"\nSuccessfully paused blocking for {timer / 60} minutes.")
     else:
-        print(f"\nFailed to pause blocking. Status code: {add_domain_request.status_code}")
-        print(add_domain_request.json())  # Show the error message
+        print(f"\nFailed to pause blocking. Status code: {pause_blocking_request.status_code}")
+        print(pause_blocking_request.json())  # Show the error message
 
 def pihole_status():
     status_url = f"https://{PIHOLE_ADDR}/api/stats/summary"
