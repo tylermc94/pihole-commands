@@ -17,3 +17,9 @@ Lists out the top domains by query count.
 
 ### List Top Clients
 Lists the most active client devices on the network.
+
+### List Top Blocked Domains
+Lists the 10 most frequently blocked domains by query count.
+
+### Add Domain
+Allows the user to add domains to the allow or deny lists.
