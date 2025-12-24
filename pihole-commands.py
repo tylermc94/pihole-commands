@@ -13,7 +13,7 @@ csrf = ""
 
 def auth(): #Authenticate to pihole and return sid and csrf tokens
     # Set up auth variables
-    auth_url = f"https://{PIHOLE_ADDR}/api/auth"
+    auth_url = f"{PIHOLE_ADDR}/api/auth"
     api_key = {"password": PIHOLE_API_TOKEN}
     auth_response = requests.post(auth_url, json=api_key, verify=False)
 
@@ -39,7 +39,7 @@ def output_table(data, data_key, col1_header, col1_key, col2_header="Count", col
 def top_domains():
     global sid
     global csrf
-    top_domains_url = f"https://{PIHOLE_ADDR}/api/stats/top_domains"
+    top_domains_url = f"{PIHOLE_ADDR}/api/stats/top_domains"
     headers = {
         "X-FTL-SID": sid,
         "X-FTL-CSRF": csrf
@@ -51,7 +51,7 @@ def top_domains():
 def top_blocked_domains():
     global sid
     global csrf
-    top_domains_url = f"https://{PIHOLE_ADDR}/api/stats/top_domains"
+    top_domains_url = f"{PIHOLE_ADDR}/api/stats/top_domains"
     params = {
         "Blocked": True
     }
@@ -66,7 +66,7 @@ def top_blocked_domains():
 def top_clients():
     global sid
     global csrf
-    top_clients_url = f"https://{PIHOLE_ADDR}/api/stats/top_clients"
+    top_clients_url = f"{PIHOLE_ADDR}/api/stats/top_clients"
     headers = {
         "X-FTL-SID": sid,
         "X-FTL-CSRF": csrf
@@ -89,7 +89,7 @@ def add_domain():
         domain_type = "deny"
     else:
         print("Invalid choice!")
-    add_domain_url = f"https://{PIHOLE_ADDR}/api/domains/{domain_type}/exact"
+    add_domain_url = f"{PIHOLE_ADDR}/api/domains/{domain_type}/exact"
     #Get domain to be added
     domain = input("\nDomain to be added:")
     params = {
@@ -144,7 +144,7 @@ def pause_blocking():
     else:
         print("Invalid choice!")    
 
-    pause_blocking_url = f"https://{PIHOLE_ADDR}/api/dns/blocking"
+    pause_blocking_url = f"{PIHOLE_ADDR}/api/dns/blocking"
 
     params = {
         "blocking": False,
@@ -164,7 +164,7 @@ def pause_blocking():
         print(pause_blocking_request.json())  # Show the error message
 
 def pihole_status():
-    status_url = f"https://{PIHOLE_ADDR}/api/stats/summary"
+    status_url = f"{PIHOLE_ADDR}/api/stats/summary"
     headers = {
         "X-FTL-SID": sid,
         "X-FTL-CSRF": csrf
@@ -190,7 +190,7 @@ def pihole_status():
 
 def show_menu():
     """Display the menu options to the user"""
-    print(f"\n=== Connected to: https://{PIHOLE_ADDR}/api ===")
+    print(f"\n=== Connected to: {PIHOLE_ADDR}/api ===")
     print("1. List Top Domains")
     print("2. List Top Clients")
     print("3. List Top Blocked Domains")
